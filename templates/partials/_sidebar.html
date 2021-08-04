@@ -1,0 +1,10 @@
+{% load news_tags %}
+{% get_categories as categories %}
+<ul class="list-group">
+    <h4>Всего категорий : {{categories.count}}</h4>
+    {% for category in categories %}
+    <a href="{{ category.get_absolute_url }}" class="list-group-item">{{category}}</a>
+    {% endfor %}
+</ul>
+
+<!-- {% show_categories %} -->
