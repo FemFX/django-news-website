@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{%block title%}{{ news.title }}{%endblock%}
+{% block sidebar %}
+{% include 'partials/_sidebar.html' %}
+{% endblock %}
+{% block content %}
+<div class="card mb-3">
+    <div class="card-header">
+        Категория : <a href="{{ news.category.get_absolute_url }}">{{news.category}}</a>
+    </div>
+    <div class="card-body">
+        <div class="media d-flex">
+            {% if news.photo %}
+            <img src="{{ news.photo.url }}" style="border-radius: 5px; object-fit: scale-down;" class="mr-3" alt="Image"
+                width="350">
+            {% endif %}
+            <div class="media-body ml-3" style="margin-left: 10px;">
+                <h4 class="card-title">{{news.title}}</h4>
+                <p class="card-text">{{news.content|safe|linebreaks}}</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer text-muted">
+        <!-- {{news.created_at | date:"Y-m-d H:i" }} -->
+        {{news.created_at | timesince }}
+    </div>
+    <hr>
+    {% if request.user.is_authenticated %}
+    <h4>Добавить комментарий</h4>
+    <form action="{% url 'getNews' news.pk %}" method="POST">
+        {% csrf_token %}
+        {{form.text}}
+        <button class="btn btn-block btn-success">Добавить комментарий</button>
+    </form>
+    {% endif %}
+    {% if comments %}
+    <h4>Kомментарии:</h4>
+    {% for comment in comments %}
+    <div class="comment mt-3">
+        <div class="d-flex"><b class="">{{ comment.author }}</b> : <span class="">{{comment.text}}</span></div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
